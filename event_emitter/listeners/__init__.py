@@ -1,1 +1,1 @@
-from .sns_topic import SNSListener
+from .base import ListenerBase

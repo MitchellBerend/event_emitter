@@ -1,6 +1,5 @@
-from dataclasses import asdict
 import logging
-from typing import Self
+from dataclasses import asdict
 
 from event_emitter.utils import IsDataclass
 
@@ -8,7 +7,7 @@ from event_emitter.utils import IsDataclass
 class DebugLogger:
     __LOGGER = None
 
-    def __new__(cls) -> Self:
+    def __new__(cls) -> "DebugLogger":
         if cls.__LOGGER is None:
             cls.__LOGGER = logging.getLogger(__name__)
 

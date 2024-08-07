@@ -1,7 +1,9 @@
+from __future__ import annotations
 from dataclasses import is_dataclass
-from typing import List, Self
+from typing import List, Optional
 
-from .utils import IsDataclass, Listener
+from .listeners import ListenerBase
+from .utils import IsDataclass
 
 
 class EventSink:
@@ -20,24 +22,24 @@ class EventSink:
     },
     """
 
-    __instance: Self | None = None
+    __instance: Optional[EventSink] = None
     __events: List[IsDataclass] = []
-    __listeners: List[Listener] = []
+    __listeners: List[ListenerBase] = []
 
-    def __new__(cls) -> Self:
+    def __new__(cls) -> "EventSink":
         if cls.__instance is None:
             cls.__instance = super(EventSink, cls).__new__(cls)
 
         return cls.__instance  # type: ignore
 
     @classmethod
-    def register_listener(cls, listener: Listener):
+    def register_listener(cls, listener: ListenerBase):
         """
         Registers a listener to the EventSink. A listener decides what events it
         listens to by implementing the on() method.
 
         Args:
-            listener (Listener): The listener to be registered.
+            listener (ListenerBase): The listener to be registered.
         """
         # Just making sure the instance exists
         if not cls.__instance:
@@ -69,9 +71,9 @@ class EventSink:
         if not cls.__instance:
             cls.__instance = cls()
 
-        for listener in cls.__listeners:
-            for event in cls.__events:
-                if listener.on() in event.__class__.__name__ or listener.on() == "*":
+        for event in cls.__events:
+            for listener in cls.__listeners:
+                if listener.on() == "*" or listener.on() in event.__class__.__name__:
                     listener.execute(event)
 
         cls.__events = []
