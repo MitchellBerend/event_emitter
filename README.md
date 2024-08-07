@@ -54,8 +54,7 @@ class MyListener:
     def on() -> str:
         return "MyEvent"
 
-    @classmethod
-    def execute(cls, event: MyEvent):
+    def execute(self, event: MyEvent):
         print(f"Event received: {event.data}")
 ```
 
@@ -64,7 +63,7 @@ class MyListener:
 Register the listener with the `EventSink`:
 
 ```python
-EventSink.register_listener(MyListener)
+EventSink.register_listener(MyListener())
 ```
 
 ### Emitting an Event
@@ -101,12 +100,11 @@ class MyListener:
     def on() -> str:
         return "MyEvent"
 
-    @classmethod
-    def execute(cls, event: MyEvent):
+    def execute(self, event: MyEvent):
         print(f"Event received: {event.data}")
 
 # Register the listener
-EventSink.register_listener(MyListener)
+EventSink.register_listener(MyListener())
 
 # Emit an event
 event = MyEvent(data="Hello, World!")
