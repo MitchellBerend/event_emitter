@@ -1,15 +1,15 @@
-from typing import Protocol
+from typing import Protocol, runtime_checkable
 
 from ..utils import IsDataclass
 
 
+@runtime_checkable
 class ListenerBase(Protocol):
     """
     Protocol for event listeners. Any listener must implement these methods.
     """
 
-    @staticmethod
-    def on() -> str:
+    def on(self) -> str:
         """
         Specifies the event type this listener is interested in. The return
         string gets used to find exact matches on event names. A wildcard can be

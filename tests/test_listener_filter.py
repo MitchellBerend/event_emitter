@@ -20,8 +20,7 @@ class Baz:
 
 
 class FitleredExcludedListener:
-    @staticmethod
-    def on() -> str:
+    def on(self) -> str:
         """This tests if the filter mechanism on the EventSink actually works"""
         return "NotBar"
 
@@ -48,6 +47,11 @@ SINK.register_listener(FitleredIncludedListener())
 @pytest.fixture
 def sink() -> EventSink:
     return SINK
+
+
+def test_implements_protocol():
+    assert issubclass(FitleredIncludedListener, ListenerBase)
+    assert issubclass(FitleredExcludedListener, ListenerBase)
 
 
 def test_events_filter_exclude(sink: EventSink):
