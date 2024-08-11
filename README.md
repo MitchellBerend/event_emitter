@@ -18,7 +18,7 @@ must implement:
   method returns a string that is used to match events. It can return a specific
   event type or a wildcard (`*`) to match all events.
 
-- `execute(cls, event: IsDataclass)`: Executes the listener's action when an
+- `execute(self, event: IsDataclass)`: Executes the listener's action when an
   event is emitted. This method takes an event, which must be an instance of a
   dataclass.
 
@@ -56,6 +56,20 @@ class MyListener:
 
     def execute(self, event: MyEvent):
         print(f"Event received: {event.data}")
+
+
+class MyOtherListener:
+    """
+    Initializes the listener with a specified event type.
+    """
+    def __init__(self, on: str = "*"):
+        self.__on = on
+
+    def on() -> str:
+        return "MyEvent"
+
+    def execute(self, event: MyEvent):
+        print(f"Another event received: {event.data}")
 ```
 
 ### Registering a Listener
@@ -64,6 +78,8 @@ Register the listener with the `EventSink`:
 
 ```python
 EventSink.register_listener(MyListener())
+# This only runs when events that contain the string "Event" are processed
+EventSink.register_listener(MyOtherListener("Event"))
 ```
 
 ### Emitting an Event
@@ -98,6 +114,9 @@ class MyEvent:
 class MyListener:
     @staticmethod
     def on() -> str:
+        """
+        You can also implement the on method as a staticmethod.
+        """
         return "MyEvent"
 
     def execute(self, event: MyEvent):
